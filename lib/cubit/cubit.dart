@@ -13,6 +13,7 @@ class HomeCubit extends Cubit<HomeViewStates>{
 
 void deleteNote(Note note ) {
   notes.remove(note);
+  saveData();
   emit(DeleteNoteState());
 }
 
@@ -51,10 +52,8 @@ void addNote(String content , String color) async{
   Note newNote = Note(contant: content,color: Color(int.parse(color)));
   
     notes.add(newNote);
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString("content$counter",content);
-    preferences.setString("color$counter",color);
-
+    
+  saveData();
   emit(AddNoteState());
 }
 

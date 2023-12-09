@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'dart:io';
 import 'package:to_do_list/components/body/homeview_body.dart';
 import 'package:to_do_list/constant.dart';
 import 'package:to_do_list/cubit/cubit.dart';
@@ -16,11 +16,7 @@ class HomeView extends StatelessWidget {
         if (state is IntialState) {
           HomeCubit.get(context).loadData();
         }
-        else if (state is LoadingDataState){
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+        
         return Scaffold(
           backgroundColor: backgroundColor,
           appBar: AppBar(
@@ -35,20 +31,20 @@ class HomeView extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () {
-                  HomeCubit.get(context).saveData();
+                  exit(0); 
                 },
                 icon: const Icon(
-                  Icons.check,
+                  Icons.arrow_back_ios,
                 ),
               ),
             ],
           ),
-          body: const HomeViewBody(),
+          body: (state is LoadingDataState)?const Center(child: CircularProgressIndicator(),):const HomeViewBody(),
           floatingActionButton: FloatingActionButton(
             backgroundColor: appColor,
             foregroundColor: backgroundColor,
             onPressed: () {
-              //  Navigator.push(context, MaterialPageRoute(builder: (context) => const AddNoteBody()),);
+             
 
               ShowDialog(context);
             },
