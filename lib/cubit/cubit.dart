@@ -10,9 +10,10 @@ class HomeCubit extends Cubit<HomeViewStates>{
   int counter = 0;
   static HomeCubit get(context) => BlocProvider.of(context);
    static  List<Note> notes =[] ;
-
+  List<String> colors = [];
 void deleteNote(Note note ) {
   notes.remove(note);
+  
   saveData();
   emit(DeleteNoteState());
 }
@@ -21,12 +22,13 @@ void saveData()async{
   counter = 0;
   SharedPreferences preferences = await SharedPreferences.getInstance();
   List<String> contants = [];
-  List<Color> colors = [];
+  
   for (int i =0 ; i<notes.length;i++){
    contants.add(notes[i].contant);
-   colors.add(notes[i].color);
+   
   }
   preferences.setStringList('contants', contants);
+  preferences.setStringList('colors', colors);
  
   
   
@@ -37,9 +39,10 @@ void loadData()async{
   emit(LoadingDataState());
   SharedPreferences preferences = await SharedPreferences.getInstance();
   List<String> contants = preferences.getStringList('contants')??[];
+  List<String> Loadedcolors = preferences.getStringList('colors')??[];
   if (contants.isNotEmpty){
     for (int i =0 ; i<contants.length;i++){
-      notes.add(Note(contant: contants[i],color:const Color(0xffbc6c25)));
+      notes.add(Note(contant: contants[i],color:Color(int.parse(Loadedcolors[i]))));
     }
     emit(LoadNoteState());
   }
@@ -52,7 +55,8 @@ void addNote(String content , String color) async{
   Note newNote = Note(contant: content,color: Color(int.parse(color)));
   
     notes.add(newNote);
-    
+    colors.add(color);
+
   saveData();
   emit(AddNoteState());
 }
